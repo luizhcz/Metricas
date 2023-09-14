@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management" 
+    ports:
+      - "5672:5672" 
+      - "15672:15672" 
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin" # Nome de usu�rio do RabbitMQ
+      RABBITMQ_DEFAULT_PASS: "admin2017" # Senha do RabbitMQ
+
+  console-app:
+    build:
+      context: ./ 
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_DEFAULT_PORT: 5672 # Porta padrao para comunicação com o RabbitMQ
+      RABBITMQ_DEFAULT_USER: "admin" # Nome de usuario do RabbitMQ
+      RABBITMQ_DEFAULT_PASS: "admin2017" # Senha do RabbitMQ
+      RABBITMQ_DEFAULT_QUEUE: "nome_da_fila" # nome da fila do consumidor
+      TIME_SEND_BATCH_MINUTES: 30 # tempo para enviar o lote de arquivos para o httpClient
